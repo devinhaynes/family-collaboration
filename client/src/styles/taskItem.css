@@ -1,0 +1,17 @@
+td {
+    position: relative;
+}
+
+tr.done td:before {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    border-bottom: 3px solid black;
+    width: 100%;
+}
+
+tr.overlay {
+    background-color: green;
+    opacity: .8;
+}
