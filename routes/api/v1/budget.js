@@ -1,24 +1,23 @@
 const express = require('express');
 const router = express.Router();
 
-const Budget = '../../../models/Budget.js';
+const Budget = require('../../../models/Budget.js');
 
 router.get('/', (req, res) => {
-    Budget.find().then(obj => console.log(obj))
+    console.log('Attempting GET to Budget....');
+    Budget.find().then(db => res.send(db));
 })
 
 router.post('/', (req, res) => {
     const reqObj = req.body.newBudget;
-    reqObj.map(reqObj => {
-        let budgetObj = new Budget({
-            title: reqObj.title,
-            name: reqObj.name,
-            amount: reqObj.amount,
-        })
-        console.log(budgetObj);
-        budgetObj.save((err) => {
-            if (err) return console.log(err);
-        })
+    let budgetObj = new Budget({
+        title: reqObj.title,
+        name: reqObj.name,
+        amount: reqObj.amount
+    })
+
+    budgetObj.save((err) => {
+        if (err) return console.log(err);
     })
 })
 

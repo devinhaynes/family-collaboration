@@ -5,142 +5,95 @@ import { BudgetInput } from './BudgetInput';
 
 export const Budget = () => {
     let summaryTotal = 0;
-    const [income, updateIncome] = useState({
-        'title': 'Income',
-        'rows': [
-            {
-                'name': 'Jannil Work',
-                'amount': 7000
-            },
-            {
-                'name': 'Devin Work',
-                'amount': 6000
-            }
-        ]
-    })
+    const [income, setIncome] = useState([]);
+    const [housing, setHousing] = useState([]);
+    const [food, setFood] = useState([]);
+    const [cars, setCars] = useState([]);
+    const [test, setTest] = useState([]);
+    const apiUrl = 'http://192.168.1.10:3001/api/budget';
 
-    const [housing, updateHousing] = useState({
-        'title': 'Housing',
-        'rows': [
-            {
-                'name': 'Mortgage',
-                'amount': -1300
-            },
-            {
-                'name': 'Rent',
-                'amount': -2800
-            }
-        ]
-    })
+    useEffect(() => {
+        axios.get(apiUrl)
+            .then(res => res.data.map(obj => {
+                let objToAdd = {
+                    name: obj.name,
+                    amount: obj.amount
+                }
+                switch (obj.title) {
+                    case 'Income':
+                        setIncome([...income, objToAdd]);
+                        break;
+                    case 'Housing':
+                        setHousing([...housing, objToAdd]);
+                        break;
+                    case 'Food':
+                        setFood([...food, objToAdd]);
+                        break;
+                    case 'Cars':
+                        setCars([...cars, objToAdd]);
+                        break;
+                    case 'testing':
+                        setTest([...test, objToAdd]);
+                        break;
+                    default:
+                        break;
+                }
+            }))
+    }, [])
 
-    const [food, updateFood] = useState({
-        'title': 'Food',
-        'rows': [
-            {
-                'name': 'Groceries',
-                'amount': -700
-            },
-            {
-                'name': 'Fast Food',
-                'amount': -50
-            }
-        ]
-    })
+    const addBudget = budget => {
+        const title = budget.title;
 
-    const [cars, updateCars] = useState({
-        'title': 'Cars',
-        'rows': [
-            {
-                'name': 'Maxda CX-5',
-                'amount': -50
-            },
-            {
-                'name': 'Honda CR-V',
-                'amount': -60
-            }
-        ]
-    })
+        //For sending to DB
+        const newBudget = budget;
+        axios.post(apiUrl, { newBudget })
+            .then(res => console.log(res.body))
 
-    const budgetItems = [income, housing, food, cars];
-
-
-    budgetItems.map(item => {
-        item.rows.map(row => {
-            summaryTotal += row.amount;
-        })
-    })
-
-    const addBudgetItem = (obj) => {
-        const title = obj.title;
+        //For adding to state
+        const budgetToAdd = {
+            name: budget.name,
+            amount: budget.amount
+        };
         switch (title) {
-            case 'Cars':
-                updateCars([...cars, obj]);
+            case 'income':
+                setIncome([...income, budgetToAdd]);
                 break;
-            case 'Housing':
-                updateHousing([...housing, housing.rows.push({ 'name': obj.name, 'amount': obj.amount })]);
+            case 'housing':
+                setHousing([...housing, budgetToAdd]);
                 break;
-            case 'Food':
-                updateFood([...food, obj]);
+            case 'food':
+                setFood([...food, budgetToAdd]);
                 break;
-            case 'Income':
-                updateIncome([...income, obj]);
+            case 'cars':
+                setCars([...cars, budgetToAdd]);
                 break;
             default:
+                setHousing([...income, { name: 'Test', amount: 1000 }]);
                 break;
         }
+
     }
 
+    const budgetItems = [
+        { title: 'Income', rows: income },
+        { title: 'Testing', rows: test },
+        { title: 'Housing', rows: housing },
+        { title: 'Cars', rows: cars },
+        { title: 'Food', rows: food }
+    ]
 
-    const apiUrl = 'http://192.168.1.10:3001/api/budget';
-    // const [budget, setBudget] = useState([
-    //     {
-    //         'title': 'Cars',
-    //         'rows': [
-    //             {
-    //                 'name': 'Mazda',
-    //                 'amount': -50
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         'title': 'Housing',
-    //         'rows': [
-    //             {
-    //                 'name': 'Rent',
-    //                 'amount': 2800
-    //             },
-    //             {
-    //                 'name': 'Mortgage',
-    //                 'amount': 1300
-    //             }
-    //         ]
-    //     }
-    // ]);
-
-    // useEffect(() => {
-    //     axios.get(apiUrl)
-    //         .then(res => console.log(res.data))
-    // }, [])
-
-    // const addBudgetItem = budgetItem => {
-    //     let title = budgetItem.title;
-
-    //     budget.filter(obj => {
-    //         if (obj.title === title) {
-    //             console.log(`Object sent with a title of ${title}. Matches current state configuration`);
-    //             obj.rows.push({ name: budgetItem.name, amount: budgetItem.amount })
-    //             obj.rows.map(row => console.log(row));
-    //             setBudget([...budget, obj])
-    //         }
-    //     })
-    // }
-
+    const getSummaryTotal = () => {
+        console.log('Summary Total calculating...');
+        budgetItems.map(budgetItem => budgetItem.rows.map(row => {
+            summaryTotal += row.amount;
+        }))
+    }
     return (
         <div className="Budget component">
             {budgetItems.map(item => {
                 return <BudgetItem title={item.title} rows={item.rows} />
             })}
-            <BudgetInput addItem={addBudgetItem} />
+            <BudgetInput addItem={addBudget} />
             <div className="d-flex">
                 <div className='flex-grow-1 mx-3'>
                     <h3>Summary</h3>

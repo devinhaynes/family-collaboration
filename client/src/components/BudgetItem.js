@@ -24,7 +24,7 @@ export const BudgetItem = ({ title, rows }) => {
                 {rows.map((item, index) => {
                     return (<tr>
                         <td key={index}>{item.name}</td>
-                        <td key={index}><input type="number" className="form-control text-right" placeholder="0" defaultValue={item.amount} /></td>
+                        <td key={index}><input type="number" className="form-control text-right" placeholder="0" defaultValue={item.amount.toFixed(2)} /></td>
                     </tr>
                     )
                 })}

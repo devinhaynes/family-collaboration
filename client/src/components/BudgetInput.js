@@ -1,25 +1,45 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { clearInputs } from './clearInputs';
+
+import { BudgetNameInput } from './BudgetNameInput';
+import { BudgetAmountInput } from './BudgetAmountInput';
+import { BudgetTitleInput } from './BudgetTitleInput';
 
 export const BudgetInput = ({ addItem }) => {
     let newBudget = {};
 
+
     const handleSubmit = e => {
         e.preventDefault();
-        if (newBudget) {
-            addItem({ title: newBudget.title, name: 'Default', amount: 0 })
-        }
+
+        addItem(newBudget);
+        clearInputs();
     }
 
     const handleChange = e => {
         e.preventDefault();
-        newBudget.title = e.target.value;
+        let name = e.target.name;
+        switch (name) {
+            case 'title':
+                newBudget.title = e.target.value;
+                break;
+            case 'name':
+                newBudget.name = e.target.value;
+                break;
+            case 'amount':
+                newBudget.amount = e.target.value;
+                break;
+            default:
+                break;
+        }
     }
-
     return (
-        <div className='input-group my-2'>
-            <input onChange={handleChange} className='form-control' type="text" placeholder='Enter Budget Category Header' />
-            <button onClick={handleSubmit} type='button' className="btn btn-outline-primary rounded-circle"><i className="fas fa-plus"></i></button>
+        <div>
+            <BudgetTitleInput change={handleChange} click={handleSubmit} />
+            <BudgetNameInput change={handleChange} click={handleSubmit} />
+            <BudgetAmountInput change={handleChange} click={handleSubmit} />
         </div>
+
     )
 }
+
