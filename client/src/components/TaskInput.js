@@ -3,22 +3,20 @@ import { addDate } from './Bills';
 import { clearInputs } from './clearInputs';
 
 export const TaskInput = ({ addTask }) => {
-    let newTask = {
-        'isCompleted': false
-    };
+    let newTask = {};
 
     const handleSubmit = e => {
         e.preventDefault();
         if (!newTask) return;
         addTask(newTask);
-        clearInputs();
+        clearInputs('task-input');
     }
 
     const handleChange = e => {
         let el = e.target.name;
         switch (el) {
             case 'task':
-                newTask.task = e.target.value;
+                newTask.newTask = e.target.value;
                 break;
             case 'priority':
                 newTask.priority = e.target.value;
@@ -33,16 +31,9 @@ export const TaskInput = ({ addTask }) => {
 
     return (
         <tr>
-            {/* <td></td> */}
             <td>
-                <input onChange={handleChange} className="form-control" type="text" name="task" placeholder="Enter new task..." />
+                <input onChange={handleChange} className="form-control task-input" type="text" name="task" placeholder="Enter new task..." />
             </td>
-            {/* <td>
-                <input onChange={handleChange} className="form-control" type="number" name="priority" placeholder="Assign priority level" />
-            </td>
-            <td>
-                <input onChange={handleChange} className="form-control" type="date" name="dueDate" />
-            </td> */}
             <td className="text-center"><button type="submit" onClick={handleSubmit} className="btn btn-outline-primary rounded-circle"><i className="fas fa-plus"></i></button></td>
         </tr >
     )

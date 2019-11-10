@@ -17,7 +17,8 @@ router.post('/', (req, res) => {
     })
 
     budgetObj.save((err) => {
-        if (err) return console.log(err);
+        if (err) return console.log(err)
+        else res.send(budgetObj);
     })
 })
 

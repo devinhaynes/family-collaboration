@@ -11,7 +11,7 @@ export const addDate = (date) => {
 }
 
 export const Bills = () => {
-    const apiUrl = 'http://192.168.1.10:3001/api/bills';
+    const apiUrl = 'http://localhost:3001/api/bills';
     const [bills, setBills] = useState([]);
 
     useEffect(() => {

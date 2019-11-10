@@ -17,19 +17,12 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    const reqObj = req.body.newTask;
-    console.log(reqObj);
-    reqObj.map(item => {
-        let taskObj = new Task({
-            task: item.task,
-            // priority: parseFloat(item.priority),
-            // dueDate: item.dueDate,
-            // isCompleted: item.isCompleted
-        })
-        console.log(taskObj);
-        taskObj.save((err) => {
-            if (err) return console.log(err);
-        })
+    let taskObj = new Task({
+        task: req.body.newTask,
+    })
+    taskObj.save((err) => {
+        if (err) res.status(402).json(err)
+        else res.send(taskObj);
     })
 })
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { clearInputs } from './clearInputs';
 
 import { BudgetNameInput } from './BudgetNameInput';
@@ -13,7 +13,7 @@ export const BudgetInput = ({ addItem }) => {
         e.preventDefault();
 
         addItem(newBudget);
-        clearInputs();
+        clearInputs('input-group-input');
     }
 
     const handleChange = e => {
@@ -34,7 +34,7 @@ export const BudgetInput = ({ addItem }) => {
         }
     }
     return (
-        <div>
+        <div id='BudgetInput'>
             <BudgetTitleInput change={handleChange} click={handleSubmit} />
             <BudgetNameInput change={handleChange} click={handleSubmit} />
             <BudgetAmountInput change={handleChange} click={handleSubmit} />
