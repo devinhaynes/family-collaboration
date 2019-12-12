@@ -16,18 +16,16 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    const reqObj = req.body.newBill;
-    reqObj.map(bill => {
-        let billObj = new Bill({
-            name: bill.name,
-            amount: bill.amount,
-            dueDate: bill.dueDate,
-            autoPay: bill.autoPay
-        })
-        console.log(billObj);
-        billObj.save((err) => {
-            if (err) return console.log(err);
-        })
+    let { name, amount, dueDate, autoPay } = req.body;
+    let billObj = new Bill({
+        name,
+        amount,
+        dueDate,
+        autoPay
+    })
+    billObj.save((err) => {
+        if (err) return console.log(err)
+        else res.send(billObj);
     })
 })
 

@@ -15,29 +15,38 @@ export const Bills = () => {
     const [bills, setBills] = useState([]);
 
     useEffect(() => {
-        axios.get(apiUrl)
-            .then(billList => setBills(billList.data))
+        getBills();
     }, [])
 
     const addBills = bill => {
-        const newBill = [bill];
-
-        axios.post(apiUrl, { newBill })
-            .then(res => console.log(res.body));
-        setBills([...bills, bill]);
-
+        axios.post(apiUrl, bill)
+            .then(() => getBills());
     }
 
     const removeBill = name => {
         axios.delete(`${apiUrl}/${name}`, { params: { name: name } })
-            .then(res => setBills(res.data))
+            .then(() => getBills())
+    }
+
+    const getBills = () => {
+        axios.get(apiUrl)
+            .then(billList => setBills(billList.data))
     }
 
     return (
         <div className="Bills component">
             <table className="table" id="billsTable">
+                {
+                    bills.length <= 0 ? (
+                        <thead>
+                            <tr>
+                                <th colSpan='3' style={{ background: '#f76890' }}>Bills</th>
+                            </tr>
+                        </thead>
+                    ) : ''
+                }
                 {bills.map((bill, index) => <BillItem completed={removeBill} key={index} index={index} bill={bill} />)}
-                <BillInput addBill={addBills} />
+                <BillInput addBill={addBills} addDate={addDate} />
             </table>
         </div>
     )
